@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MachineLearningTest.IrisData;
+using MachineLearningTest.Segmenti;
+using Microsoft.ML;
+using Microsoft.ML.Trainers;
+using Microsoft.ML.Transforms;
 
 namespace MachineLearningTest
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            //new PredictIris();
+            new PredictDigit();
         }
     }
 }
