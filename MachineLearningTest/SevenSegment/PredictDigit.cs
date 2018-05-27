@@ -10,12 +10,13 @@ namespace MachineLearningTest.SevenSegment
     {
         public PredictDigit()
         {
-            var pipeline = new LearningPipeline();
-            var dataPath = Path.Combine("Segmenti", "segments.txt");
-            pipeline.Add(new TextLoader<Digit>(dataPath, false, ","));
-            pipeline.Add(new ColumnConcatenator("Features", nameof(Digit.Features)));
-
-            pipeline.Add(new StochasticDualCoordinateAscentClassifier());
+            var dataPath = Path.Combine("SevenSegment", "segments.txt");
+            var pipeline = new LearningPipeline
+            {
+                new TextLoader<Digit>(dataPath, false, ","),
+                new ColumnConcatenator("Features", nameof(Digit.Features)),
+                new StochasticDualCoordinateAscentClassifier()
+            };
 
             var model = pipeline.Train<Digit, DigitPrediction>();
             var prediction = model.Predict(new Digit

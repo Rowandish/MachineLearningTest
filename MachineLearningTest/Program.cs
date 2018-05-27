@@ -11,7 +11,7 @@ namespace MachineLearningTest
     {
         private static void Main(string[] args)
         {
-            //new PredictIris();
+            new PredictIris();
             new PredictDigit();
         }
     }

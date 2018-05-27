@@ -10,29 +10,29 @@ namespace MachineLearningTest.IrisData
     {
         public PredictIris()
         {
-            // STEP 2: Create a pipeline and load your data
-            var pipeline = new LearningPipeline();
+            var dataPath = Path.Combine("IrisData (Microsoft example)", "iris.data.txt");
 
-            var dataPath = Path.Combine("IrisData", "iris.data.txt");
-            // Aggiungo alla pipeline i dati del txt serializzati come IrisData
-            pipeline.Add(new TextLoader<IrisData>(dataPath, false, ","));
+            // Create a pipeline and load your data
+            var pipeline = new LearningPipeline
+            {
+                // Aggiungo alla pipeline i dati del txt serializzati come IrisData
+                new TextLoader<IrisData>(dataPath, false, ","),
+                // Definisco l'output
+                // Trasformo la colonna "label" che è una stringa in numeri (indici), in quanto solo numeri possono stare nel classificatore
+                // Questo devo farlo per ogni ingresso o uscita che è di tipo stringa.
+                new Dictionarizer("Label"),
+                // Definisco gli input
+                // Mette nella colonna "Features" le colonne di IrisData (usa il reflector quindi le passo come stringhe)
+                new ColumnConcatenator("Features", nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth),
+                    nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth)),
+                // Aggiungo un algoritmo di apprendimento, voglio un classificatore in quanto voglio prevedere che tipo di fiore a partire dalle caratteristiche dei petali
 
-            // Definisco l'output
-            // Trasformo la colonna "label" che è una stringa in numeri (indici), in quanto solo numeri possono stare nel classificatore
-            // Questo devo farlo per ogni ingresso o uscita che è di tipo stringa.
-            pipeline.Add(new Dictionarizer("Label"));
+                new StochasticDualCoordinateAscentClassifier(),
+                // Ritrasformo la colonna "label" che lui internamente gestice come numeri (vedi il passo con il Dictionarizer) nella stringa corrispondente, in modo che in uscita dell'algoritmo io abbia i nommi dei fiori e non dei numeri random.
+                // Notare ch PredictedLabel è definito come ColumnName in IrisPrediction
+                new PredictedLabelColumnOriginalValueConverter {PredictedLabelColumn = "PredictedLabel"}
+            };
 
-            // Definisco gli input
-            // Mette nella colonna "Features" le colonne di IrisData (usa il reflector quindi le passo come stringhe)
-            pipeline.Add(new ColumnConcatenator("Features", nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth),
-                nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth)));
-
-            // Aggiungo un algoritmo di apprendimento, voglio un classificatore in quanto voglio prevedere che tipo di fiore a partire dalle caratteristiche dei petali
-            pipeline.Add(new StochasticDualCoordinateAscentClassifier());
-
-            // Ritrasformo la colonna "label" che lui internamente gestice come numeri (vedi il passo con il Dictionarizer) nella stringa corrispondente, in modo che in uscita dell'algoritmo io abbia i nommi dei fiori e non dei numeri random.
-            // Notare ch PredictedLabel è definito come ColumnName in IrisPrediction
-            pipeline.Add(new PredictedLabelColumnOriginalValueConverter {PredictedLabelColumn = "PredictedLabel"});
 
             // una volta definito tutto effettuo il training con IrisData in ingresso e IrisPrediction in uscita.
             var model = pipeline.Train<IrisData, IrisPrediction>();
