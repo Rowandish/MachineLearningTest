@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
@@ -13,9 +14,7 @@ namespace MachineLearningTest.Segmenti
             var pipeline = new LearningPipeline();
             var dataPath = Path.Combine("Segmenti", "segments.txt");
             pipeline.Add(new TextLoader<Digit>(dataPath, false, ","));
-            pipeline.Add(new ColumnConcatenator("Features", nameof(Digit.Up), nameof(Digit.Middle),
-                nameof(Digit.Bottom), nameof(Digit.UpLeft), nameof(Digit.BottomLeft), nameof(Digit.TopRight),
-                nameof(Digit.BottomRight)));
+            pipeline.Add(new ColumnConcatenator("Features", nameof(Digit.Features)));
 
             pipeline.Add(new StochasticDualCoordinateAscentClassifier());
 
@@ -24,14 +23,14 @@ namespace MachineLearningTest.Segmenti
             {
                 Up = 1,
                 Middle = 1,
-                Bottom = 1,
-                UpLeft = 0,
-                BottomLeft = 0,
+                Bottom = 0,
+                UpLeft = 1,
+                BottomLeft = 1,
                 TopRight = 1,
-                BottomRight = 0
+                BottomRight = 1
             });
 
-            Console.WriteLine($"Predicted digit is: {prediction.Score}, {prediction.ExpectedDigit - 1}");
+            Console.WriteLine($"Predicted digit is: {prediction.ExpectedDigit - 1}");
             Console.ReadLine();
         }
     }
