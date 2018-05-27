@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Runtime.Api;
 
-namespace MachineLearningTest.Segmenti
+namespace MachineLearningTest.SevenSegment
 {
     public class Digit
     {

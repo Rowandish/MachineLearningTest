@@ -1,6 +1,6 @@
 ﻿using System;
 using MachineLearningTest.IrisData;
-using MachineLearningTest.Segmenti;
+using MachineLearningTest.SevenSegment;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;

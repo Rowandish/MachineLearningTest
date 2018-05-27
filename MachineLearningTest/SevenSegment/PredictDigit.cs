@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 
-namespace MachineLearningTest.Segmenti
+namespace MachineLearningTest.SevenSegment
 {
     public class PredictDigit
     {
